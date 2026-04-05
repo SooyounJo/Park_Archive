@@ -24,8 +24,8 @@ body {
   position: fixed;
   left: 0;
   top: 0;
-  width: 14px;
-  height: 14px;
+  width: 42px;
+  height: 42px;
   border-radius: 999px;
   background: #000;
   pointer-events: none;

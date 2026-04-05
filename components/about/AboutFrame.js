@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "@/styles/about.module.css";
 
 const PROFILE_TEXT =
@@ -12,6 +12,7 @@ const PHILOSOPHY_TEXT =
 export function AboutFrame() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
+  const glowRef = useRef(null);
 
   useEffect(() => {
     const close = () => setIsMenuOpen(false);
@@ -19,8 +20,49 @@ export function AboutFrame() {
     return () => router.events.off("routeChangeStart", close);
   }, [router.events]);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const finePointer = window.matchMedia?.("(pointer: fine)")?.matches;
+    if (!finePointer) return;
+
+    let x = 0;
+    let y = 0;
+    let raf = 0;
+
+    const move = (e) => {
+      x = e.clientX;
+      y = e.clientY;
+      if (raf) return;
+      raf = window.requestAnimationFrame(() => {
+        raf = 0;
+        const el = glowRef.current;
+        if (!el) return;
+        el.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
+        el.style.opacity = "1";
+      });
+    };
+
+    const hide = () => {
+      const el = glowRef.current;
+      if (!el) return;
+      el.style.opacity = "0";
+    };
+
+    window.addEventListener("mousemove", move, { passive: true });
+    window.addEventListener("mouseleave", hide, { passive: true });
+    window.addEventListener("blur", hide);
+
+    return () => {
+      window.removeEventListener("mousemove", move);
+      window.removeEventListener("mouseleave", hide);
+      window.removeEventListener("blur", hide);
+      if (raf) window.cancelAnimationFrame(raf);
+    };
+  }, []);
+
   return (
     <div className={styles.frame} data-node-id="13:41">
+      <div ref={glowRef} className={styles.cursorGlow} aria-hidden="true" />
       <section className={styles.section} data-name="section-header" data-node-id="13:45">
         <div className={styles.headerArea} data-name="page title" data-node-id="13:46">
           <div className={`${styles.titleRow} ${isMenuOpen ? styles.titleRowOpen : ""}`}>

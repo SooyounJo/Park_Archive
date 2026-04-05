@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
 
+const DOT_SIZE = 42;
+
 export function CursorDot() {
   const ref = useRef(null);
 
@@ -23,7 +25,7 @@ export function CursorDot() {
         const el = ref.current;
         if (!el) return;
         el.style.transform = `translate3d(${x}px, ${y}px, 0) translate(-50%, -50%)`;
-        el.style.opacity = "0.4";
+        el.style.opacity = "1";
       });
     };
 
@@ -45,6 +47,13 @@ export function CursorDot() {
     };
   }, []);
 
-  return <div ref={ref} className="cursorDot" aria-hidden="true" />;
+  return (
+    <div
+      ref={ref}
+      className="cursorDot"
+      style={{ width: DOT_SIZE, height: DOT_SIZE }}
+      aria-hidden="true"
+    />
+  );
 }
 
