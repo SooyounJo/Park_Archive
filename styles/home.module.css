@@ -1,0 +1,227 @@
+.frame {
+  background: #f0f0ec;
+  color: #000;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.section {
+  max-width: 1440px;
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-block: clamp(16px, 4vw, 60px);
+}
+
+.padX {
+  padding-left: clamp(16px, 5.55vw, 80px);
+  padding-right: clamp(16px, 5.55vw, 80px);
+}
+
+.titleRow {
+  min-height: var(--titleRowH);
+  display: flex;
+  align-items: flex-start;
+  padding-bottom: clamp(8px, 2vw, 16px);
+  position: relative;
+}
+
+.titleRowOpen {
+  align-items: flex-start;
+}
+
+.headerArea {
+  position: relative;
+  --titleRowH: clamp(44px, 7vw, 62px);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.iconButton {
+  appearance: none;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  color: inherit;
+  border-radius: 10px;
+  cursor: pointer;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(calc(-100% - 14px)) translateY(0);
+}
+
+.iconButtonOpen {
+  top: 0;
+  transform: translateX(calc(-100% - 14px)) translateY(0);
+}
+
+.iconButton:focus-visible {
+  outline: 2px solid rgba(0, 0, 0, 0.65);
+  outline-offset: 2px;
+}
+
+.burger {
+  width: 22px;
+  height: 16px;
+  display: grid;
+  align-content: center;
+  gap: 4px;
+}
+
+.burgerLine {
+  height: 2px;
+  background: rgba(0, 0, 0, 0.85);
+  border-radius: 2px;
+}
+
+.brand {
+  text-decoration: none;
+  color: inherit;
+  display: inline-block;
+}
+
+.brand:focus-visible {
+  outline: 2px solid rgba(0, 0, 0, 0.65);
+  outline-offset: 4px;
+}
+
+.title {
+  font-family: Pretendard, ui-sans-serif, system-ui, -apple-system, Segoe UI,
+    Roboto, Helvetica, Arial;
+  font-weight: 400;
+  font-size: clamp(20px, 2.4vw, 32px);
+  line-height: 1.45;
+  letter-spacing: 0;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.menuInline {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.menuLink {
+  font-family: Pretendard, ui-sans-serif, system-ui, -apple-system, Segoe UI,
+    Roboto, Helvetica, Arial;
+  font-weight: 400;
+  font-size: clamp(20px, 2.4vw, 32px);
+  line-height: 1.45;
+  text-decoration: none;
+  color: inherit;
+  width: fit-content;
+  display: inline-block;
+  transform: scale(1);
+  transform-origin: left center;
+  transition: transform 140ms ease;
+}
+
+.menuLink:hover {
+  transform: scale(1.03);
+}
+
+.menuLink:hover {
+  text-decoration: underline;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.tabsRow {
+  height: clamp(44px, 7vw, 62px);
+  border-bottom: 1px solid #000;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: start;
+  padding-top: 0;
+}
+
+.tab {
+  font-family: Pretendard, ui-sans-serif, system-ui, -apple-system, Segoe UI,
+    Roboto, Helvetica, Arial;
+  font-weight: 400;
+  font-size: clamp(20px, 2.4vw, 32px);
+  line-height: 1.45;
+  margin: 0;
+}
+
+.tabLeft {
+  text-align: left;
+}
+
+.tabCenter {
+  text-align: center;
+}
+
+.tabRight {
+  text-align: right;
+}
+
+.tabLink {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  transform: scale(1);
+  transition: transform 140ms ease;
+}
+
+.tabLink:hover {
+  transform: scale(1.03);
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+.tabLeft .tabLink,
+.tabLink.tabLeft {
+  transform-origin: left center;
+}
+
+.tabCenter .tabLink,
+.tabLink.tabCenter {
+  transform-origin: center center;
+}
+
+.tabRight .tabLink,
+.tabLink.tabRight {
+  transform-origin: right center;
+}
+
+.tabLink:focus-visible {
+  outline: 2px solid rgba(0, 0, 0, 0.65);
+  outline-offset: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menuLink,
+  .tabLink {
+    transition: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .section {
+    padding-block: 16px;
+  }
+}
+
