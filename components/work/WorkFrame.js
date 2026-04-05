@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useMemo, useState } from "react";
 import styles from "@/styles/work.module.css";
 
 const DEFAULT_BODY = [
@@ -13,11 +14,26 @@ export function WorkFrame({
   body = DEFAULT_BODY,
 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const router = useRouter();
+  const activeObj =
+    router.pathname === "/obj1"
+      ? "obj1"
+      : router.pathname === "/obj2"
+        ? "obj2"
+        : router.pathname === "/obj3"
+          ? "obj3"
+          : null;
 
   const bodyLines = useMemo(() => {
     const parts = Array.isArray(body) ? body : [String(body)];
     return parts.flatMap((p, i) => (i === 0 ? [p] : ["", p]));
   }, [body]);
+
+  useEffect(() => {
+    const close = () => setIsMenuOpen(false);
+    router.events.on("routeChangeStart", close);
+    return () => router.events.off("routeChangeStart", close);
+  }, [router.events]);
 
   return (
     <div className={styles.frame} data-node-id="13:87">
@@ -40,7 +56,14 @@ export function WorkFrame({
             </button>
 
             {isMenuOpen ? (
-              <nav id="work-menu" className={styles.menuInline} aria-label="메인 메뉴">
+              <nav
+                id="work-menu"
+                className={`${styles.menuInline} ${styles.menuMotion}`}
+                aria-label="메인 메뉴"
+              >
+                <Link className={styles.menuLink} href="/" onClick={() => setIsMenuOpen(false)}>
+                  HOME
+                </Link>
                 <Link className={styles.menuLink} href="/about" onClick={() => setIsMenuOpen(false)}>
                   ABOUT
                 </Link>
@@ -68,13 +91,34 @@ export function WorkFrame({
         <div className={styles.spacer} />
 
         <div className={styles.bottomNavRow} data-name="page title" data-node-id="13:94">
-          <Link className={`${styles.navLink} ${styles.left}`} href="/obj1" data-node-id="13:95">
+          <Link
+            className={`${styles.navLink} ${styles.left} ${
+              activeObj ? (activeObj === "obj1" ? styles.navActive : styles.navInactive) : ""
+            }`}
+            href="/obj1"
+            data-node-id="13:95"
+            aria-current={activeObj === "obj1" ? "page" : undefined}
+          >
             OBJ1
           </Link>
-          <Link className={`${styles.navLink} ${styles.center}`} href="/obj2" data-node-id="13:96">
+          <Link
+            className={`${styles.navLink} ${styles.center} ${
+              activeObj ? (activeObj === "obj2" ? styles.navActive : styles.navInactive) : ""
+            }`}
+            href="/obj2"
+            data-node-id="13:96"
+            aria-current={activeObj === "obj2" ? "page" : undefined}
+          >
             OBJ2
           </Link>
-          <Link className={`${styles.navLink} ${styles.right}`} href="/obj3" data-node-id="13:97">
+          <Link
+            className={`${styles.navLink} ${styles.right} ${
+              activeObj ? (activeObj === "obj3" ? styles.navActive : styles.navInactive) : ""
+            }`}
+            href="/obj3"
+            data-node-id="13:97"
+            aria-current={activeObj === "obj3" ? "page" : undefined}
+          >
             OBJ3
           </Link>
         </div>
