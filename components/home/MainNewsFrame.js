@@ -6,16 +6,13 @@ import styles from "@/styles/home.module.css";
 
 const MAIN_SLIDE_IMAGES = ["/images/skypx1.png", "/images/gra.png", "/images/layer.png"];
 const SLIDE_INTERVAL_MS = 6000;
-/** After all slides are decoded, hold splash before fade (ms). */
-const POST_LOAD_HOLD_MS = 3000;
+/** Always show white splash with title for this long, then fade to the main view. */
+const SPLASH_HOLD_MS = 2000;
 const SPLASH_FADE_MS = 900;
-/** If some assets never fire onLoadingComplete, continue anyway. */
-const LOAD_FAILSAFE_MS = 25000;
 
 export function MainNewsFrame() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [slideIndex, setSlideIndex] = useState(0);
-  const [loadedSet, setLoadedSet] = useState(() => new Set());
   const [introDone, setIntroDone] = useState(false);
   const [introExiting, setIntroExiting] = useState(false);
   const splashExitFallbackRef = useRef(null);
@@ -29,8 +26,6 @@ export function MainNewsFrame() {
           ? "obj3"
           : null;
 
-  const allSlidesLoaded = loadedSet.size >= MAIN_SLIDE_IMAGES.length;
-
   useEffect(() => {
     const close = () => setIsMenuOpen(false);
     router.events.on("routeChangeStart", close);
@@ -38,28 +33,12 @@ export function MainNewsFrame() {
   }, [router.events]);
 
   useEffect(() => {
-    const id = window.setTimeout(() => {
-      setLoadedSet(new Set(MAIN_SLIDE_IMAGES));
-    }, LOAD_FAILSAFE_MS);
-    return () => window.clearTimeout(id);
-  }, []);
-
-  useEffect(() => {
-    if (!allSlidesLoaded) return undefined;
-    const reduced =
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const holdMs = reduced ? 0 : POST_LOAD_HOLD_MS;
     const holdTimer = window.setTimeout(() => {
-      if (reduced) {
-        setIntroDone(true);
-        return;
-      }
       setIntroExiting(true);
       splashExitFallbackRef.current = window.setTimeout(() => {
         setIntroDone(true);
       }, SPLASH_FADE_MS + 120);
-    }, holdMs);
+    }, SPLASH_HOLD_MS);
     return () => {
       window.clearTimeout(holdTimer);
       if (splashExitFallbackRef.current) {
@@ -67,7 +46,7 @@ export function MainNewsFrame() {
         splashExitFallbackRef.current = null;
       }
     };
-  }, [allSlidesLoaded]);
+  }, []);
 
   /** Lock scroll before paint so the first frame never scrolls behind the splash. */
   useLayoutEffect(() => {
@@ -107,17 +86,9 @@ export function MainNewsFrame() {
     return () => window.clearInterval(id);
   }, [introDone]);
 
-  const markSlideLoaded = (src) => {
-    setLoadedSet((prev) => {
-      const next = new Set(prev);
-      next.add(src);
-      return next;
-    });
-  };
-
   return (
     <div
-      className={`${styles.frame} ${introDone ? styles.introComplete : styles.introPending} ${introExiting ? styles.introExiting : ""}`}
+      className={`${styles.frame} ${introDone ? styles.introComplete : styles.introPending}`}
       data-node-id="2:24"
     >
       <div className={styles.bgSlideshow} aria-hidden="true">
@@ -135,7 +106,6 @@ export function MainNewsFrame() {
               sizes="100vw"
               quality={92}
               priority
-              onLoadingComplete={() => markSlideLoaded(src)}
             />
           </div>
         ))}
@@ -146,13 +116,13 @@ export function MainNewsFrame() {
           className={styles.splashOverlay}
           aria-hidden="true"
           onTransitionEnd={handleSplashTransitionEnd}
+          style={{
+            opacity: introExiting ? 0 : 1,
+            transition: `opacity ${SPLASH_FADE_MS}ms ease`,
+            pointerEvents: introExiting ? "none" : "auto",
+          }}
         >
           <p className={styles.splashTitle}>PARKSIO</p>
-          <div className={styles.splashLoader} aria-label="로딩 중">
-            <span className={styles.splashDot} />
-            <span className={styles.splashDot} />
-            <span className={styles.splashDot} />
-          </div>
         </div>
       ) : null}
 
