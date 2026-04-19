@@ -1,5 +1,5 @@
 .frame {
-  background: #f0f0ec;
+  background: #f0f2f2;
   color: #000;
   height: 100vh;
   height: 100svh;
@@ -40,7 +40,15 @@
 
 .headerArea {
   position: relative;
-  --titleRowH: clamp(44px, 7vw, 62px);
+  --titleRowH: clamp(37px, 6vw, 53px);
+}
+
+.headerAreaOpen {
+  z-index: 100;
+}
+
+.headerAreaOpen .iconButton {
+  z-index: 102;
 }
 
 .titleRow {
@@ -53,6 +61,7 @@
 
 .titleRowOpen {
   align-items: flex-start;
+  overflow: visible;
 }
 
 .iconButton {
@@ -102,7 +111,7 @@
   font-family: Pretendard, ui-sans-serif, system-ui, -apple-system, Segoe UI,
     Roboto, Helvetica, Arial;
   font-weight: 400;
-  font-size: clamp(20px, 2.4vw, 32px);
+  font-size: clamp(17px, 2.05vw, 27px);
   line-height: 1.45;
   margin: 0;
   white-space: nowrap;
@@ -112,6 +121,19 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.menuOverlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.menuOverlayBlurred {
+  isolation: isolate;
+  mix-blend-mode: normal;
 }
 
 @keyframes menuItemDrop {
@@ -153,7 +175,7 @@
   font-family: Pretendard, ui-sans-serif, system-ui, -apple-system, Segoe UI,
     Roboto, Helvetica, Arial;
   font-weight: 400;
-  font-size: clamp(20px, 2.4vw, 32px);
+  font-size: clamp(17px, 2.05vw, 27px);
   line-height: 1.45;
   text-decoration: none;
   color: inherit;
@@ -184,13 +206,15 @@
   height: 427px;
   background: #d9d9d9;
   grid-column: 1;
+  display: block;
+  object-fit: cover;
 }
 
 .metaText {
   font-family: Pretendard, ui-sans-serif, system-ui, -apple-system, Segoe UI,
     Roboto, Helvetica, Arial;
   font-weight: 400;
-  font-size: 16px;
+  font-size: 14px;
   line-height: 1.45;
   margin: 0;
 }
@@ -199,7 +223,7 @@
   font-family: Pretendard, ui-sans-serif, system-ui, -apple-system, Segoe UI,
     Roboto, Helvetica, Arial;
   font-weight: 400;
-  font-size: 13px;
+  font-size: 11px;
   line-height: 1.45;
   margin: 0;
   white-space: pre-wrap;
@@ -211,6 +235,29 @@
   margin: 4px 0;
 }
 
+/* Middle column: looser contact lines + bio (match looser reference layout) */
+.middleCol > .metaText {
+  padding-bottom: 12px;
+}
+
+.middleCol > .divider {
+  margin: 0 0 18px;
+}
+
+.middleCol > .divider:last-of-type {
+  margin-bottom: 27px;
+}
+
+.bioBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.bioBlock .smallText {
+  line-height: 1.45;
+}
+
 .middleCol {
   width: 100%;
   max-width: 322px;
@@ -219,29 +266,112 @@
 }
 
 .rightCol {
-  width: 100%;
-  max-width: 320px;
+  width: 322px;
+  max-width: 322px;
   min-width: 0;
   grid-column: 5;
 }
 
-.educationTitle {
+/* Figma 42:248 — right column stack */
+.rightColStack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.blockHeadingCaps {
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.educationBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.eduYearRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 33px;
+}
+
+.educationInner {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 6px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.educationInner .metaText {
   margin: 0;
 }
 
-.educationGrid {
-  margin-top: 10px;
+.educationInner > .metaText + .metaText {
+  margin-top: 4px;
+}
+
+.rightColDivider {
+  margin: 8px 0 0;
+  width: 100%;
+  height: 2px;
+  min-height: 2px;
+}
+
+.experienceBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 8px;
+  width: 100%;
+}
+
+.bodySmall {
+  font-family: Pretendard, ui-sans-serif, system-ui, -apple-system, Segoe UI,
+    Roboto, Helvetica, Arial;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 1.45;
+  margin: 0;
+}
+
+.aboutFooterRow {
+  border-bottom: 1px solid #000;
   display: grid;
-  grid-template-columns: 44px 1fr;
-  column-gap: 10px;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: end;
+  padding: 0 0 6px;
+  box-sizing: border-box;
+  flex-shrink: 0;
 }
 
-.eduYears {
-  white-space: pre-line;
+.aboutFooterLink {
+  font-family: Pretendard, ui-sans-serif, system-ui, -apple-system, Segoe UI,
+    Roboto, Helvetica, Arial;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.45;
+  margin: 0;
+  text-decoration: none;
+  color: inherit;
 }
 
-.eduSchool {
-  white-space: pre-line;
+.aboutFooterLeft {
+  text-align: left;
+}
+
+.aboutFooterCenter {
+  text-align: center;
+}
+
+.aboutFooterRight {
+  text-align: right;
 }
 
 .spacer {
@@ -249,18 +379,19 @@
 }
 
 .bottomNavRow {
-  height: clamp(44px, 7vw, 62px);
   border-bottom: 1px solid #000;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  align-items: start;
+  align-items: end;
+  padding: 0 0 6px;
+  box-sizing: border-box;
 }
 
 .navLink {
   font-family: Pretendard, ui-sans-serif, system-ui, -apple-system, Segoe UI,
     Roboto, Helvetica, Arial;
   font-weight: 400;
-  font-size: clamp(20px, 2.4vw, 32px);
+  font-size: clamp(17px, 2.05vw, 27px);
   line-height: 1.45;
   margin: 0;
   display: block;
@@ -305,6 +436,7 @@
   }
 
   .rightCol {
+    width: 100%;
     max-width: none;
     grid-column: 1 / -1;
   }

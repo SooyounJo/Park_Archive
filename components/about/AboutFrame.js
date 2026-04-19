@@ -1,13 +1,13 @@
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import styles from "@/styles/about.module.css";
 
-const PROFILE_TEXT =
-  "I am a product designer who focuses on rethinking\neveryday experiences through the things people touch\nand use. Rather than separating form and function, I\napproach design as a continuous relationship between\nuser behavior, context, and interaction.\n\nMy process is rooted in making—quickly building\nprototypes, testing them in real situations, and refining\nideas through iteration. This allows me to move beyond\nassumptions and understand how a product truly lives\nin the hands of its user. in the hands of its user.";
-
-const PHILOSOPHY_TEXT =
-  "I’m interested in creating products that are not only\nvisually refined, but also intuitive, adaptive, and\nmeaningful over time. To me, good design is something\nthat reveals itself gradually—something that users\ncome to understand, trust, and form a relationship with.\n\nUltimately, I aim to design objects that feel less like\ntools and more like companions—quietly supporting\neveryday life while continuously evolving with the user.";
+const PROFILE_PARAS = [
+  "I am a product designer who focuses on rethinking everyday experiences through the things people touch and use. Rather than separating form and function, I approach design as a continuous relationship between user behavior, context, and interaction.",
+  "My process is rooted in making—quickly building prototypes, testing them in real situations, and refining ideas through iteration. This allows me to move beyond assumptions and understand how a product truly lives in the hands of its user. in the hands of its user.",
+];
 
 export function AboutFrame() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -64,8 +64,14 @@ export function AboutFrame() {
     <div className={styles.frame} data-node-id="13:41">
       <div ref={glowRef} className={styles.cursorGlow} aria-hidden="true" />
       <section className={styles.section} data-name="section-header" data-node-id="13:45">
-        <div className={styles.headerArea} data-name="page title" data-node-id="13:46">
-          <div className={`${styles.titleRow} ${isMenuOpen ? styles.titleRowOpen : ""}`}>
+        <div
+          className={`${styles.headerArea} ${isMenuOpen ? styles.headerAreaOpen : ""}`}
+          data-name="page title"
+          data-node-id="13:46"
+        >
+          <div
+            className={`${styles.titleRow} ${isMenuOpen ? styles.titleRowOpen : ""}`}
+          >
             <button
               type="button"
               className={`${styles.iconButton} ${isMenuOpen ? styles.iconButtonOpen : ""}`}
@@ -84,7 +90,7 @@ export function AboutFrame() {
             {isMenuOpen ? (
               <nav
                 id="about-menu"
-                className={`${styles.menuInline} ${styles.menuMotion}`}
+                className={`${styles.menuInline} ${styles.menuOverlay} ${isMenuOpen ? styles.menuOverlayBlurred : ""} ${styles.menuMotion}`}
                 aria-label="메인 메뉴"
               >
                 <Link
@@ -118,46 +124,77 @@ export function AboutFrame() {
         </div>
 
         <div className={styles.contentGrid}>
-          <div className={styles.imagePlaceholder} data-node-id="13:58" />
+          <Image
+            className={styles.imagePlaceholder}
+            src="/images/about-profile.png"
+            alt="Sio Park"
+            width={320}
+            height={427}
+            sizes="(max-width: 900px) 100vw, 320px"
+            quality={92}
+            data-node-id="13:58"
+          />
 
           <div className={styles.middleCol}>
             <p className={styles.metaText} data-node-id="13:68">
-              E : SIOBABO@gmail.com
+              email : siopark.design@gmail.com
             </p>
             <div className={styles.divider} aria-hidden="true" />
             <p className={styles.metaText} data-node-id="13:69">
-              IN : SIOBABO
+              insta : sio.park_
             </p>
             <div className={styles.divider} aria-hidden="true" />
 
-            <p className={styles.smallText} data-node-id="13:74">
-              {PROFILE_TEXT}
-            </p>
+            <div className={styles.bioBlock} data-node-id="13:74">
+              {PROFILE_PARAS.map((para, i) => (
+                <p key={i} className={styles.smallText}>
+                  {para}
+                </p>
+              ))}
+            </div>
           </div>
 
           <div className={styles.rightCol}>
-            <p className={`${styles.metaText} ${styles.educationTitle}`} data-node-id="13:76">
-              EDUCATION
-            </p>
+            <div className={styles.rightColStack}>
+              <div className={styles.educationBlock}>
+                <p className={`${styles.metaText} ${styles.blockHeadingCaps}`} data-node-id="47:109">
+                  EDUCATION
+                </p>
+                <div className={styles.educationInner}>
+                  <div className={styles.eduYearRow}>
+                    <span className={styles.metaText}>{`2022 - `}</span>
+                    <span className={styles.metaText}>Currents</span>
+                  </div>
+                  <p className={styles.metaText}>Korea National University of Arts</p>
+                  <p className={styles.metaText}>Product design</p>
+                  <div className={`${styles.divider} ${styles.rightColDivider}`} aria-hidden="true" />
+                </div>
+              </div>
 
-            <div className={styles.educationGrid}>
-              <p className={`${styles.metaText} ${styles.eduYears}`} data-node-id="13:78">
-                {"2022\n-\n2026"}
-              </p>
-              <p className={`${styles.metaText} ${styles.eduSchool}`} data-node-id="13:82">
-                {"Korea National University\n\nObject Design"}
-              </p>
+              <div className={styles.experienceBlock} data-node-id="47:100">
+                <p className={styles.bodySmall}>Experience</p>
+                <p className={styles.bodySmall}>2023.10-2024.02</p>
+                <p className={styles.bodySmall}>LG Display CMF Researcher</p>
+                <p className={styles.bodySmall}>2024.12</p>
+                <p className={styles.bodySmall}>DDP design store Entry Screening Round 1</p>
+              </div>
             </div>
-
-            <div className={styles.divider} aria-hidden="true" />
-
-            <p className={styles.smallText} data-node-id="13:84">
-              {PHILOSOPHY_TEXT}
-            </p>
           </div>
         </div>
 
         <div className={styles.spacer} />
+
+        <div className={styles.aboutFooterRow} data-name="page title" data-node-id="47:103">
+          <Link className={`${styles.aboutFooterLink} ${styles.aboutFooterLeft}`} href="/obj1" data-node-id="47:104">
+            Layering
+          </Link>
+          <Link className={`${styles.aboutFooterLink} ${styles.aboutFooterCenter}`} href="/obj2" data-node-id="47:105">
+            Sky Pixels
+          </Link>
+          <Link className={`${styles.aboutFooterLink} ${styles.aboutFooterRight}`} href="/obj3" data-node-id="47:106">
+            Gradation Clock
+          </Link>
+        </div>
       </section>
     </div>
   );

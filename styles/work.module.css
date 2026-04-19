@@ -1,8 +1,198 @@
 .frame {
-  background: #f0f0ec;
-  color: #000;
+  background: #f0f2f2;
+  color: #5a5d5e;
   min-height: 100vh;
   min-height: 100svh;
+}
+
+/* Sky Pixels — scrollable image stack + fixed UI (Figma 42:161) */
+.frameSky {
+  position: relative;
+  background: #f0f2f2;
+  height: 100svh;
+  height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Dedicated snap scroller (document snap is unreliable on mobile WebKit) */
+.skyScrollPort {
+  position: relative;
+  z-index: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  touch-action: pan-y;
+}
+
+.skyScrollPort::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+/* Fixed UI on slides: neutral gray (no difference blend) */
+.skyFixedTopPad,
+.skyCopy,
+.skyFixedBottom {
+  mix-blend-mode: normal;
+  color: #5a5d5e;
+}
+
+.frameSky .skyFixedTopPad a,
+.frameSky .pageTitle,
+.frameSky .menuLink,
+.frameSky .navLink,
+.frameSky .skyCopyLine {
+  color: #5a5d5e;
+}
+
+.frameSky .burgerLine {
+  background: #5a5d5e;
+}
+
+/* Sky Pixels (obj2): white type on image stack */
+.skyPixelsFrame .skyFixedTopPad,
+.skyPixelsFrame .skyCopy,
+.skyPixelsFrame .skyFixedBottom {
+  color: #fff;
+}
+
+.skyPixelsFrame .skyFixedTopPad a,
+.skyPixelsFrame .pageTitle,
+.skyPixelsFrame .menuLink,
+.skyPixelsFrame .navLink,
+.skyPixelsFrame .skyCopyLine {
+  color: #fff;
+}
+
+.skyPixelsFrame .burgerLine {
+  background: #fff;
+}
+
+.skyScrollBlock {
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  min-height: 100svh;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.skyScrollImg {
+  object-fit: cover;
+  object-position: center;
+}
+
+.scrollVideoSection {
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  min-height: 100svh;
+  flex-shrink: 0;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(16px, 4vw, 48px);
+  box-sizing: border-box;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.scrollVideoIframe {
+  width: min(420px, 92vw);
+  aspect-ratio: 9 / 16;
+  max-height: min(90vh, 920px);
+  border: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 56px rgba(0, 0, 0, 0.45);
+}
+
+.skyFixedLayer {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.skyFixedTopPad {
+  pointer-events: auto;
+  flex-shrink: 0;
+  padding: clamp(16px, 4vw, 60px) clamp(16px, 5.55vw, 80px) 0;
+  max-width: 1440px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.skyCopyFadeWrap {
+  pointer-events: none;
+}
+
+.skyCopyFadeWrap .skyCopy {
+  pointer-events: auto;
+}
+
+.skyCopy {
+  pointer-events: auto;
+  position: absolute;
+  left: clamp(16px, 6.5vw, 94px);
+  top: clamp(110px, 18vh, 155px);
+  width: min(360px, calc(100% - 32px));
+  max-width: min(360px, calc(100vw - 32px));
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  font-family: Pretendard, ui-sans-serif, system-ui, -apple-system, Segoe UI,
+    Roboto, Helvetica, Arial;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+/* WORK / project name + year — same left edge as header */
+.skyCopyHead {
+  flex-shrink: 0;
+}
+
+/* Specs + paragraphs — inset so it doesn’t stack on the title column */
+.skyCopyBody {
+  margin-top: 0;
+  padding-left: clamp(14px, 3.8vw, 36px);
+  box-sizing: border-box;
+}
+
+.skyCopyLine {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.skyFixedBottom {
+  pointer-events: auto;
+  margin-top: auto;
+  flex-shrink: 0;
+  padding: 0 clamp(16px, 5.55vw, 80px) clamp(16px, 4vw, 60px);
+  max-width: 1440px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .section {
@@ -17,7 +207,15 @@
 
 .headerArea {
   position: relative;
-  --titleRowH: clamp(44px, 7vw, 62px);
+  --titleRowH: clamp(33px, 5.4vw, 47px);
+}
+
+.headerAreaOpen {
+  z-index: 100;
+}
+
+.headerAreaOpen .iconButton {
+  z-index: 102;
 }
 
 .titleRow {
@@ -30,6 +228,7 @@
 
 .titleRowOpen {
   align-items: flex-start;
+  overflow: visible;
 }
 
 .iconButton {
@@ -71,7 +270,7 @@
 
 .burgerLine {
   height: 2px;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(90, 93, 94, 0.92);
   border-radius: 2px;
 }
 
@@ -79,7 +278,7 @@
   font-family: Pretendard, ui-sans-serif, system-ui, -apple-system, Segoe UI,
     Roboto, Helvetica, Arial;
   font-weight: 400;
-  font-size: clamp(20px, 2.4vw, 32px);
+  font-size: clamp(15px, 1.85vw, 24px);
   line-height: 1.45;
   margin: 0;
   white-space: nowrap;
@@ -89,6 +288,20 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.menuOverlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/* Open menu: isolate blend on scroll pages — no card panel */
+.menuOverlayBlurred {
+  isolation: isolate;
+  mix-blend-mode: normal;
 }
 
 @keyframes menuItemDrop {
@@ -130,7 +343,7 @@
   font-family: Pretendard, ui-sans-serif, system-ui, -apple-system, Segoe UI,
     Roboto, Helvetica, Arial;
   font-weight: 400;
-  font-size: clamp(20px, 2.4vw, 32px);
+  font-size: clamp(15px, 1.85vw, 24px);
   line-height: 1.45;
   text-decoration: none;
   color: inherit;
@@ -146,15 +359,41 @@
   text-decoration: underline;
 }
 
+.heroWrap {
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: calc(-1 * clamp(16px, 5.55vw, 80px));
+  margin-right: calc(-1 * clamp(16px, 5.55vw, 80px));
+  width: calc(100% + 2 * clamp(16px, 5.55vw, 80px));
+  max-width: none;
+}
+
+.heroAspect {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: min(56vh, 720px);
+  background: #e8e8e4;
+}
+
+.heroImg {
+  object-fit: cover;
+  object-position: center;
+}
+
 .details {
   margin-top: clamp(18px, 4vw, 62px);
   max-width: 414px;
   font-family: Pretendard, ui-sans-serif, system-ui, -apple-system, Segoe UI,
     Roboto, Helvetica, Arial;
   font-weight: 400;
-  font-size: 13px;
+  font-size: 10px;
   line-height: 1.45;
   white-space: pre-wrap;
+}
+
+.heroWrap + .details {
+  margin-top: clamp(12px, 3vw, 32px);
 }
 
 .details p {
@@ -170,18 +409,18 @@
 }
 
 .bottomNavRow {
-  height: clamp(44px, 7vw, 62px);
-  border-bottom: 1px solid #000;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  align-items: start;
+  align-items: end;
+  padding: 0 0 6px;
+  box-sizing: border-box;
 }
 
 .navLink {
   font-family: Pretendard, ui-sans-serif, system-ui, -apple-system, Segoe UI,
     Roboto, Helvetica, Arial;
   font-weight: 400;
-  font-size: clamp(20px, 2.4vw, 32px);
+  font-size: 15px;
   line-height: 1.45;
   margin: 0;
   display: block;
@@ -225,6 +464,10 @@
   .menuLink,
   .navLink {
     transition: none;
+  }
+
+  .skyScrollPort {
+    scroll-snap-type: y proximity;
   }
 }
 

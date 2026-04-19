@@ -1,9 +1,74 @@
 .frame {
-  background: #f0f0ec;
+  background: #f0f2f2;
   color: #000;
   height: 100vh;
   height: 100svh;
   overflow: hidden;
+  position: relative;
+}
+
+/* First visit: full-screen default image + PARKSIO, then fade into main UI */
+.landingOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+  transition: opacity 1s ease;
+}
+
+.introPending:not(.introExiting) .landingOverlay {
+  opacity: 1;
+}
+
+.introPending.introExiting .landingOverlay {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.landingBg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.landingBgImg {
+  object-fit: cover;
+  object-position: center;
+}
+
+.landingTitle {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-family: Pretendard, ui-sans-serif, system-ui, -apple-system, Segoe UI,
+    Roboto, Helvetica, Arial;
+  font-weight: 400;
+  font-size: clamp(37px, 10vw, 110px);
+  line-height: 1.08;
+  letter-spacing: 0.04em;
+  color: #fff;
+  text-shadow: 0 2px 48px rgba(0, 0, 0, 0.45);
+}
+
+.bgSlideshow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bgSlide {
+  position: absolute;
+  inset: 0;
+  transition: opacity 900ms ease;
+}
+
+.bgSlideImg {
+  object-fit: cover;
+  object-position: center;
 }
 
 .section {
@@ -13,6 +78,20 @@
   display: flex;
   flex-direction: column;
   padding-block: clamp(16px, 4vw, 60px);
+  position: relative;
+  z-index: 1;
+  transition: opacity 1s ease 0.15s;
+}
+
+.introPending .section {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.introPending.introExiting .section,
+.introComplete .section {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .padX {
@@ -30,11 +109,20 @@
 
 .titleRowOpen {
   align-items: flex-start;
+  overflow: visible;
 }
 
 .headerArea {
   position: relative;
-  --titleRowH: clamp(44px, 7vw, 62px);
+  --titleRowH: clamp(37px, 6vw, 53px);
+}
+
+.headerAreaOpen {
+  z-index: 100;
+}
+
+.headerAreaOpen .iconButton {
+  z-index: 102;
 }
 
 .srOnly {
@@ -107,7 +195,7 @@
   font-family: Pretendard, ui-sans-serif, system-ui, -apple-system, Segoe UI,
     Roboto, Helvetica, Arial;
   font-weight: 400;
-  font-size: clamp(20px, 2.4vw, 32px);
+  font-size: clamp(17px, 2.05vw, 27px);
   line-height: 1.45;
   letter-spacing: 0;
   margin: 0;
@@ -118,6 +206,19 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.menuOverlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.menuOverlayBlurred {
+  isolation: isolate;
+  mix-blend-mode: normal;
 }
 
 @keyframes menuItemDrop {
@@ -159,7 +260,7 @@
   font-family: Pretendard, ui-sans-serif, system-ui, -apple-system, Segoe UI,
     Roboto, Helvetica, Arial;
   font-weight: 400;
-  font-size: clamp(20px, 2.4vw, 32px);
+  font-size: clamp(17px, 2.05vw, 27px);
   line-height: 1.45;
   text-decoration: none;
   color: inherit;
@@ -183,19 +284,19 @@
 }
 
 .tabsRow {
-  height: clamp(44px, 7vw, 62px);
   border-bottom: 1px solid #000;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  align-items: start;
-  padding-top: 0;
+  align-items: end;
+  padding: 0 0 6px;
+  box-sizing: border-box;
 }
 
 .tab {
   font-family: Pretendard, ui-sans-serif, system-ui, -apple-system, Segoe UI,
     Roboto, Helvetica, Arial;
   font-weight: 400;
-  font-size: clamp(20px, 2.4vw, 32px);
+  font-size: 16px;
   line-height: 1.45;
   margin: 0;
 }
@@ -258,6 +359,11 @@
 @media (prefers-reduced-motion: reduce) {
   .menuLink,
   .tabLink {
+    transition: none;
+  }
+
+  .landingOverlay,
+  .section {
     transition: none;
   }
 }

@@ -7,7 +7,7 @@ export default function NotFoundPage() {
     <>
       <Seo title="404" description="페이지를 찾을 수 없습니다." />
       <Layout>
-        <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 8 }}>
+        <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8 }}>
           페이지를 찾을 수 없어요
         </h1>
         <p style={{ color: "rgba(255,255,255,0.8)", marginBottom: 16 }}>
