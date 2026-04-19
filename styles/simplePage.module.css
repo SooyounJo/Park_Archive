@@ -67,5 +67,20 @@
   font-size: 14px;
   line-height: 1.7;
   max-width: 72ch;
+  overflow-wrap: break-word;
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding-left: max(clamp(16px, 4vw, 60px), env(safe-area-inset-left, 0px));
+    padding-right: max(clamp(16px, 4vw, 60px), env(safe-area-inset-right, 0px));
+    padding-bottom: max(clamp(16px, 4vw, 60px), env(safe-area-inset-bottom, 0px));
+  }
+
+  .topRow {
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 12px;
+  }
 }
 

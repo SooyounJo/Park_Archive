@@ -1,20 +1,24 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import styles from "@/styles/home.module.css";
 
 const MAIN_SLIDE_IMAGES = ["/images/skypx1.png", "/images/gra.png", "/images/layer.png"];
 const SLIDE_INTERVAL_MS = 6000;
-/** Hold landing, then fade (ms). */
-const LANDING_HOLD_MS = 1400;
-const LANDING_FADE_MS = 1000;
+/** After all slides are decoded, hold splash before fade (ms). */
+const POST_LOAD_HOLD_MS = 3000;
+const SPLASH_FADE_MS = 900;
+/** If some assets never fire onLoadingComplete, continue anyway. */
+const LOAD_FAILSAFE_MS = 25000;
 
 export function MainNewsFrame() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [slideIndex, setSlideIndex] = useState(0);
+  const [loadedSet, setLoadedSet] = useState(() => new Set());
   const [introDone, setIntroDone] = useState(false);
   const [introExiting, setIntroExiting] = useState(false);
+  const splashExitFallbackRef = useRef(null);
   const router = useRouter();
   const activeObj =
     router.pathname === "/obj1"
@@ -25,6 +29,8 @@ export function MainNewsFrame() {
           ? "obj3"
           : null;
 
+  const allSlidesLoaded = loadedSet.size >= MAIN_SLIDE_IMAGES.length;
+
   useEffect(() => {
     const close = () => setIsMenuOpen(false);
     router.events.on("routeChangeStart", close);
@@ -32,24 +38,66 @@ export function MainNewsFrame() {
   }, [router.events]);
 
   useEffect(() => {
-    if (introDone) return undefined;
+    const id = window.setTimeout(() => {
+      setLoadedSet(new Set(MAIN_SLIDE_IMAGES));
+    }, LOAD_FAILSAFE_MS);
+    return () => window.clearTimeout(id);
+  }, []);
+
+  useEffect(() => {
+    if (!allSlidesLoaded) return undefined;
     const reduced =
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) {
-      const id = window.setTimeout(() => {
-        setIntroExiting(true);
+    const holdMs = reduced ? 0 : POST_LOAD_HOLD_MS;
+    const holdTimer = window.setTimeout(() => {
+      if (reduced) {
         setIntroDone(true);
-      }, 0);
-      return () => window.clearTimeout(id);
-    }
-    const startFade = window.setTimeout(() => setIntroExiting(true), LANDING_HOLD_MS);
-    const finish = window.setTimeout(() => setIntroDone(true), LANDING_HOLD_MS + LANDING_FADE_MS);
+        return;
+      }
+      setIntroExiting(true);
+      splashExitFallbackRef.current = window.setTimeout(() => {
+        setIntroDone(true);
+      }, SPLASH_FADE_MS + 120);
+    }, holdMs);
     return () => {
-      window.clearTimeout(startFade);
-      window.clearTimeout(finish);
+      window.clearTimeout(holdTimer);
+      if (splashExitFallbackRef.current) {
+        window.clearTimeout(splashExitFallbackRef.current);
+        splashExitFallbackRef.current = null;
+      }
+    };
+  }, [allSlidesLoaded]);
+
+  /** Lock scroll before paint so the first frame never scrolls behind the splash. */
+  useLayoutEffect(() => {
+    if (introDone) return undefined;
+    const root = document.documentElement;
+    const bodyEl = document.body;
+    const prevRoot = root.style.overflow;
+    const prevBody = bodyEl.style.overflow;
+    const prevH = root.style.height;
+    root.style.overflow = "hidden";
+    bodyEl.style.overflow = "hidden";
+    root.style.height = "100%";
+    bodyEl.style.height = "100%";
+    return () => {
+      root.style.overflow = prevRoot;
+      bodyEl.style.overflow = prevBody;
+      root.style.height = prevH;
+      bodyEl.style.height = "";
     };
   }, [introDone]);
+
+  const handleSplashTransitionEnd = (e) => {
+    if (e.target !== e.currentTarget) return;
+    if (e.propertyName !== "opacity") return;
+    if (splashExitFallbackRef.current) {
+      window.clearTimeout(splashExitFallbackRef.current);
+      splashExitFallbackRef.current = null;
+    }
+    setIntroDone((d) => (d ? d : true));
+  };
 
   useEffect(() => {
     if (!introDone) return undefined;
@@ -58,6 +106,14 @@ export function MainNewsFrame() {
     }, SLIDE_INTERVAL_MS);
     return () => window.clearInterval(id);
   }, [introDone]);
+
+  const markSlideLoaded = (src) => {
+    setLoadedSet((prev) => {
+      const next = new Set(prev);
+      next.add(src);
+      return next;
+    });
+  };
 
   return (
     <div
@@ -78,26 +134,25 @@ export function MainNewsFrame() {
               className={styles.bgSlideImg}
               sizes="100vw"
               quality={92}
-              priority={i === 0}
+              priority
+              onLoadingComplete={() => markSlideLoaded(src)}
             />
           </div>
         ))}
       </div>
 
       {!introDone ? (
-        <div className={styles.landingOverlay} aria-hidden="true">
-          <div className={styles.landingBg}>
-            <Image
-              src={MAIN_SLIDE_IMAGES[0]}
-              alt=""
-              fill
-              className={styles.landingBgImg}
-              sizes="100vw"
-              quality={92}
-              priority
-            />
+        <div
+          className={styles.splashOverlay}
+          aria-hidden="true"
+          onTransitionEnd={handleSplashTransitionEnd}
+        >
+          <p className={styles.splashTitle}>PARKSIO</p>
+          <div className={styles.splashLoader} aria-label="로딩 중">
+            <span className={styles.splashDot} />
+            <span className={styles.splashDot} />
+            <span className={styles.splashDot} />
           </div>
-          <p className={styles.landingTitle}>PARKSIO</p>
         </div>
       ) : null}
 
@@ -209,4 +264,3 @@ export function MainNewsFrame() {
     </div>
   );
 }
-

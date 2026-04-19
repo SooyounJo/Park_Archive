@@ -7,41 +7,33 @@
   position: relative;
 }
 
-/* First visit: full-screen default image + PARKSIO, then fade into main UI */
-.landingOverlay {
+/* Splash: same bg as .frame so removing it doesn’t flash a different color */
+.splashOverlay {
   position: fixed;
   inset: 0;
-  z-index: 20;
+  z-index: 30;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: clamp(20px, 5vw, 36px);
+  background: #f0f2f2;
   pointer-events: auto;
-  transition: opacity 1s ease;
+  transition: opacity 0.9s ease;
+  backface-visibility: hidden;
+  transform: translateZ(0);
 }
 
-.introPending:not(.introExiting) .landingOverlay {
+.introPending:not(.introExiting) .splashOverlay {
   opacity: 1;
 }
 
-.introPending.introExiting .landingOverlay {
+.introPending.introExiting .splashOverlay {
   opacity: 0;
   pointer-events: none;
 }
 
-.landingBg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-}
-
-.landingBgImg {
-  object-fit: cover;
-  object-position: center;
-}
-
-.landingTitle {
-  position: relative;
-  z-index: 1;
+.splashTitle {
   margin: 0;
   font-family: Pretendard, ui-sans-serif, system-ui, -apple-system, Segoe UI,
     Roboto, Helvetica, Arial;
@@ -49,8 +41,42 @@
   font-size: clamp(37px, 10vw, 110px);
   line-height: 1.08;
   letter-spacing: 0.04em;
-  color: #fff;
-  text-shadow: 0 2px 48px rgba(0, 0, 0, 0.45);
+  color: #000;
+}
+
+.splashLoader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.splashDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  animation: splashDotPulse 1.05s ease-in-out infinite both;
+}
+
+.splashDot:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.splashDot:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes splashDotPulse {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translateY(-6px);
+    opacity: 1;
+  }
 }
 
 .bgSlideshow {
@@ -80,23 +106,26 @@
   padding-block: clamp(16px, 4vw, 60px);
   position: relative;
   z-index: 1;
-  transition: opacity 1s ease 0.15s;
+  transition: opacity 0.35s ease;
 }
 
 .introPending .section {
   opacity: 0;
   pointer-events: none;
+  visibility: hidden;
 }
 
-.introPending.introExiting .section,
+/* 스플래시 제거 직후 레이아웃 튐 방지: 페이드 지연 없이 표시 */
 .introComplete .section {
   opacity: 1;
   pointer-events: auto;
+  visibility: visible;
+  transition: opacity 0s;
 }
 
 .padX {
-  padding-left: clamp(16px, 5.55vw, 80px);
-  padding-right: clamp(16px, 5.55vw, 80px);
+  padding-left: max(clamp(16px, 5.55vw, 80px), env(safe-area-inset-left, 0px));
+  padding-right: max(clamp(16px, 5.55vw, 80px), env(safe-area-inset-right, 0px));
 }
 
 .titleRow {
@@ -362,15 +391,55 @@
     transition: none;
   }
 
-  .landingOverlay,
+  .splashOverlay,
   .section {
     transition: none;
+  }
+
+  .splashDot {
+    animation: none;
+    opacity: 0.55;
+  }
+}
+
+/* Narrow viewports: burger was translated left of the padded area and clipped by .frame { overflow: hidden } */
+@media (max-width: 960px) {
+  .iconButton,
+  .iconButtonOpen {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    flex-shrink: 0;
+  }
+
+  .titleRow {
+    gap: 10px;
+    align-items: center;
+  }
+
+  .titleRowOpen {
+    align-items: flex-start;
   }
 }
 
 @media (max-width: 640px) {
   .section {
-    padding-block: 16px;
+    padding-block: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-bottom, 0px));
+  }
+
+  .tabsRow {
+    gap: 4px 8px;
+    min-width: 0;
+  }
+
+  .tab {
+    font-size: clamp(12px, 3.2vw, 16px);
+    min-width: 0;
+  }
+
+  .tabLink {
+    overflow-wrap: anywhere;
   }
 }
 
