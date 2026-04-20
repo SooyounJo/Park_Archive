@@ -242,7 +242,7 @@
   font-family: Pretendard, ui-sans-serif, system-ui, -apple-system, Segoe UI,
     Roboto, Helvetica, Arial;
   font-weight: 400;
-  font-size: clamp(17px, 2.05vw, 27px);
+  font-size: clamp(16.5px, 2vw, 26px);
   line-height: 1.45;
   text-decoration: none;
   color: inherit;
