@@ -129,6 +129,11 @@
   display: flex;
   flex-direction: column;
   --work-side-pad: clamp(16px, 5.55vw, 80px);
+  --work-title-offset: 0px;
+  --work-content-left: max(
+    var(--work-side-pad),
+    calc((100vw - 1440px) / 2 + var(--work-side-pad))
+  );
 }
 
 .skyFixedTopPad {
@@ -152,7 +157,7 @@
 .skyCopy {
   pointer-events: auto;
   position: absolute;
-  left: var(--work-side-pad);
+  left: calc(var(--work-content-left) + var(--work-title-offset));
   top: clamp(110px, 18vh, 155px);
   width: min(360px, calc(100% - 32px));
   max-width: min(360px, calc(100vw - 32px));
@@ -464,6 +469,11 @@
 }
 
 @media (max-width: 960px) {
+  .skyFixedLayer {
+    /* iconButton(38px) + titleRow gap(10px): copy aligns to "WORK" text start */
+    --work-title-offset: 48px;
+  }
+
   .iconButton,
   .iconButtonOpen {
     position: relative;
@@ -484,6 +494,10 @@
 }
 
 @media (max-width: 640px) {
+  .skyFixedLayer {
+    --work-side-pad: max(12px, env(safe-area-inset-left, 12px));
+  }
+
   .frame {
     height: auto;
     min-height: 100svh;
@@ -499,7 +513,7 @@
   }
 
   .skyCopy {
-    left: max(12px, env(safe-area-inset-left, 0px));
+    left: calc(var(--work-side-pad) + var(--work-title-offset));
     right: max(12px, env(safe-area-inset-right, 0px));
     width: auto;
     max-width: none;
