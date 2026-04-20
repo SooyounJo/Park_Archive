@@ -104,8 +104,8 @@ export function MainNewsFrame() {
               fill
               className={styles.bgSlideImg}
               sizes="100vw"
-              quality={92}
               priority
+              unoptimized
             />
           </div>
         ))}

@@ -219,8 +219,8 @@ export function WorkFrame({
                 fill
                 className={styles.skyScrollImg}
                 sizes="100vw"
-                quality={92}
                 priority={i === 0}
+                unoptimized
               />
             </div>
           ))}
@@ -263,8 +263,8 @@ export function WorkFrame({
                 fill
                 className={styles.heroImg}
                 sizes="100vw"
-                quality={92}
                 priority
+                unoptimized
               />
             </div>
           </div>

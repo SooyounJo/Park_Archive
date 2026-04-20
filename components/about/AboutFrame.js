@@ -131,8 +131,8 @@ export function AboutFrame() {
             width={320}
             height={427}
             sizes="(max-width: 900px) 100vw, 320px"
-            quality={92}
             data-node-id="13:58"
+            unoptimized
           />
 
           <div className={styles.middleCol}>
